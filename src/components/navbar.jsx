@@ -1,0 +1,103 @@
+import React, { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
+
+const Navbar = () => {
+  const location = useLocation();
+
+  const [currentUser, setCurrentUser] = useState(
+    JSON.parse(localStorage.getItem("user"))
+  );
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    setCurrentUser(user);
+  }, [location.pathname]);
+
+  return (
+    <header className="absolute top-0 left-0 w-full bg-transparent z-50">
+      <div className="container ml-30 flex items-center py-6 pl-4">
+      
+        <Link to="/" className="flex items-center space-x-3">
+          <img
+            src="/logo.jpg"
+            alt="Shohoz Rent Logo"
+            className="h-14 w-14 object-contain"
+          />
+          <div>
+            <h1 className="text-2xl font-light text-gray-100 leading-none">
+              Shohoz
+            </h1>
+            <p className="text-2xl font-light text-gray-100 leading-none">
+              Rent
+            </p>
+          </div>
+        </Link>
+
+        
+        <div className="flex-1 flex items-center justify-end">
+        
+          <nav className="flex space-x-10 font-semibold">
+            <Link
+              to="/"
+              className="text-gray-100 hover:text-yellow-400 transition"
+            >
+              Home
+            </Link>
+            <Link
+              to="/about"
+              className="text-gray-100 hover:text-yellow-400 transition"
+            >
+              About
+            </Link>
+            <Link
+              to="/contact"
+              className="text-gray-100 hover:text-yellow-400 transition"
+            >
+              Contact
+            </Link>
+          </nav>
+
+        
+          <div className="flex items-center space-x-4 ml-27 mr-10">
+            {currentUser ? (
+              <div className="flex items-center space-x-3">
+                <span className="text-white text-xl font-semibold hidden md:inline">
+                  {currentUser.username}
+                </span>
+                <Link to="/profile">
+                  <img
+                  
+                    src={
+                      currentUser.avatar 
+                      ? `http://localhost:8800${currentUser.avatar}` 
+                      : "/default.png"
+                    }
+                    alt="Profile"
+                    className="h-12 w-12 rounded-full object-cover border-2 border-white hover:scale-105 transition shadow-lg"
+                  />
+                </Link>
+              </div>
+            ) : (
+              <div className="flex items-center space-x-4">
+                <Link
+                  to="/login"
+                  className="text-white font-bold hover:text-yellow-400 transition"
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/signup"
+                  className="bg-gray-200 text-gray-900 px-5 py-2 rounded-full font-semibold hover:bg-white transition"
+                >
+                  Sign up
+                </Link>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </header>
+  );
+};
+
+export default Navbar;
