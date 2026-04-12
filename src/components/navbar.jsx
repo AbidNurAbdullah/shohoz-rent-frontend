@@ -66,10 +66,13 @@ const Navbar = () => {
                 </span>
                 <Link to="/profile">
                   <img
-                  
+                    /* ইমেজ লজিক: ক্লাউডিনারি লিঙ্ক হলে সরাসরি দেখাবে, 
+                       লোকাল পাথ হলে লাইভ ব্যাকএন্ড ইউআরএল সামনে যোগ করবে */
                     src={
                       currentUser.avatar 
-                      ? `http://localhost:8800${currentUser.avatar}` 
+                      ? (currentUser.avatar.startsWith("http") 
+                          ? currentUser.avatar 
+                          : `https://shohoz-rent-backend.onrender.com${currentUser.avatar}`) 
                       : "/default.png"
                     }
                     alt="Profile"

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import apiRequest from "../lib/apiRequest"; // apiRequest ইমপোর্ট করা হয়েছে
 import Navbar from "../components/navbar";
 
 const AddHouse = () => {
@@ -33,15 +33,13 @@ const AddHouse = () => {
     longitude: "",
   });
 
-
   useEffect(() => {
     if (id) {
       const fetchPost = async () => {
         try {
-          const res = await axios.get(`http://localhost:8800/api/posts/${id}`);
+          const res = await apiRequest.get("/posts/" + id);
           const post = res.data;
           
-        
           setForm({
             title: post.title,
             description: post.postDetail?.desc || "",
@@ -98,21 +96,13 @@ const AddHouse = () => {
     try {
       let finalImages = [...existingImages]; 
 
-    
       if (pickedFiles.length > 0) {
         const formData = new FormData();
         pickedFiles.forEach((file) => {
           formData.append("files", file);
         });
 
-        const uploadRes = await axios.post(
-          "http://localhost:8800/api/upload",
-          formData,
-          {
-            headers: { "Content-Type": "multipart/form-data" },
-            withCredentials: true,
-          }
-        );
+        const uploadRes = await apiRequest.post("/upload", formData);
         finalImages = [...finalImages, ...uploadRes.data];
       }
 
@@ -143,20 +133,10 @@ const AddHouse = () => {
       };
 
       if (id) {
-      
-        await axios.put(
-          `http://localhost:8800/api/posts/${id}`,
-          dataToSend,
-          { withCredentials: true }
-        );
+        await apiRequest.put("/posts/" + id, dataToSend);
         navigate("/" + id);
       } else {
-      
-        const res = await axios.post(
-          "http://localhost:8800/api/posts",
-          dataToSend,
-          { withCredentials: true }
-        );
+        const res = await apiRequest.post("/posts", dataToSend);
         navigate("/" + res.data.id);
       }
     } catch (err) {
@@ -300,15 +280,19 @@ const AddHouse = () => {
             </h3>
             
             <div className="grid grid-cols-2 gap-3 mb-6 overflow-y-auto max-h-[400px] pr-2 custom-scrollbar">
-            
+              {/* Existing Images Display */}
               {existingImages.map((img, index) => (
                 <div key={`old-${index}`} className="relative aspect-square rounded-lg overflow-hidden border border-white/20 group">
-                  <img src={`http://localhost:8800${img}`} alt="preview" className="w-full h-full object-cover" />
+                  <img 
+                    src={img.startsWith("http") ? img : `https://shohoz-rent-backend.onrender.com${img}`} 
+                    alt="preview" 
+                    className="w-full h-full object-cover" 
+                  />
                   <button type="button" onClick={() => removeImage(index, true)} className="absolute top-1 right-1 bg-red-500/80 text-white w-6 h-6 rounded-full text-xs">✕</button>
                 </div>
               ))}
 
-            
+              {/* New Picked Files Preview */}
               {pickedFiles.map((file, index) => (
                 <div key={`new-${index}`} className="relative aspect-square rounded-lg overflow-hidden border border-white/20 group">
                   <img src={URL.createObjectURL(file)} alt="preview" className="w-full h-full object-cover" />

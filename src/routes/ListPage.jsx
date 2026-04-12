@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import axios from "axios";
+import apiRequest from "../lib/apiRequest"; // axios এর বদলে apiRequest ইমপোর্ট করা হয়েছে
 import Filter from "../components/Filter";
 import Card from "../components/Card";
 import Map from "../components/Map";
@@ -15,7 +15,8 @@ function ListPage() {
     const fetchPosts = async () => {
       setIsLoading(true);
       try {
-        const res = await axios.get(`http://localhost:8800/api/posts${location.search}`);
+        // লাইভ ব্যাকএন্ডের জন্য apiRequest ব্যবহার করা হয়েছে
+        const res = await apiRequest.get("/posts" + location.search);
         setPosts(res.data);
       } catch (err) {
         console.log("Fetch Error:", err);

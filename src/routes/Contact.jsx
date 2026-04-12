@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import apiRequest from "../lib/apiRequest"; // apiRequest ইমপোর্ট করা হয়েছে
 import Navbar from "../components/navbar";
 
 const Contact = () => {
@@ -22,11 +22,8 @@ const Contact = () => {
     setStatus({ type: "", msg: "" });
 
     try {
-      const res = await axios.post(
-        "http://localhost:8800/api/messages",
-        formData,
-        { withCredentials: true }
-      );
+      // apiRequest ব্যবহার করা হয়েছে
+      const res = await apiRequest.post("/messages", formData);
 
       if (res.status === 200) {
         setStatus({ type: "success", msg: "Message sent! We will contact you soon." });
@@ -146,7 +143,6 @@ const Contact = () => {
               </button>
             </form>
           </div>
-
         </div>
       </div>
     </div>

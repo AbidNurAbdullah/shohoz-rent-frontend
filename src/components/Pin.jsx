@@ -6,14 +6,18 @@ function Pin({ item }) {
     <Marker position={[item.latitude, item.longitude]}>
       <Popup>
         <div className="flex gap-4">
-        
           <img
-            src={item.images[0]}
+            src={
+              item.images[0] 
+                ? (item.images[0].startsWith("http") 
+                  ? item.images[0] 
+                  : `https://shohoz-rent-backend.onrender.com${item.images[0]}`) 
+                : "/apartment2.jpg"
+            }
             alt=""
             className="w-16 h-12 object-cover rounded-md"
           />
 
-        
           <div className="flex flex-col justify-between">
             <Link
               to={`/${item.id}`}
@@ -26,7 +30,7 @@ function Pin({ item }) {
               {item.bedroom} bedroom
             </span>
 
-            <b className="text-sm">$ {item.price}</b>
+            <b className="text-sm">Tk. {item.price}</b>
           </div>
         </div>
       </Popup>

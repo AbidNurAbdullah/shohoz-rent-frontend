@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Navbar from "../components/navbar";
-import axios from "axios";
+import apiRequest from "../lib/apiRequest"; // apiRequest ইমপোর্ট করা হয়েছে
 import { useNavigate } from "react-router-dom";
 
 const UpdateProfile = () => {
@@ -23,27 +23,18 @@ const UpdateProfile = () => {
     try {
       let avatarUrl = currentUser.avatar;
 
-    
       if (file) {
         const data = new FormData();
         data.append("files", file);
 
-        const uploadRes = await axios.post(
-          "http://localhost:8800/api/upload",
-          data,
-          { withCredentials: true }
-        );
+        const uploadRes = await apiRequest.post("/upload", data);
         avatarUrl = uploadRes.data[0]; 
       }
 
-      const res = await axios.put(
-        `http://localhost:8800/api/users/${currentUser.id}`,
-        {
-          ...formData,
-          avatar: avatarUrl,
-        },
-        { withCredentials: true }
-      );
+      const res = await apiRequest.put(`/users/${currentUser.id}`, {
+        ...formData,
+        avatar: avatarUrl,
+      });
 
       localStorage.setItem("user", JSON.stringify(res.data));
       navigate("/profile");
@@ -88,7 +79,7 @@ const UpdateProfile = () => {
         <div className="flex flex-col items-center bg-white/20 backdrop-blur-xl border border-white/30 p-6 rounded-3xl shadow-2xl">
           <div className="w-48 h-48 rounded-full overflow-hidden border-4 border-white shadow-lg">
             <img 
-              src={file ? URL.createObjectURL(file) : (currentUser?.avatar ? `http://localhost:8800${currentUser.avatar}` : "/default.png")} 
+              src={file ? URL.createObjectURL(file) : (currentUser?.avatar ? (currentUser.avatar.startsWith("http") ? currentUser.avatar : `https://shohoz-rent-backend.onrender.com${currentUser.avatar}`) : "/default.png")} 
               className="object-cover w-full h-full"
               alt="Preview"
             />

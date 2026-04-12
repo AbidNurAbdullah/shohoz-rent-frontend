@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import apiRequest from "../lib/apiRequest"; // apiRequest ইমপোর্ট করা হয়েছে
 
 const Login = () => {
   const [error, setError] = useState("");
@@ -8,11 +8,14 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(""); // এরর রিসেট করা
     const formData = new FormData(e.target);
     const inputs = Object.fromEntries(formData);
 
     try {
-      const res = await axios.post("http://localhost:8800/api/auth/login", inputs, { withCredentials: true });
+      // লোকাল হোস্টের বদলে apiRequest ব্যবহার করা হয়েছে
+      const res = await apiRequest.post("/auth/login", inputs);
+      
       localStorage.setItem("user", JSON.stringify(res.data));
       navigate("/");
     } catch (err) {
@@ -56,6 +59,9 @@ const Login = () => {
         </div>
 
         <div className="p-6 bg-transparent">
+          {/* এরর মেসেজ দেখানোর জন্য ডিভ */}
+          {error && <p className="text-red-500 text-xs text-center mb-2">{error}</p>}
+
           <form className="space-y-4" onSubmit={handleSubmit}>
             <div>
               <label className="block text-sm font-medium text-white mb-1 drop-shadow">
@@ -64,6 +70,7 @@ const Login = () => {
               <input
                 name="email"
                 type="email"
+                required
                 placeholder="Enter your email"
                 className="w-full px-3 py-2 bg-white/20 backdrop-blur-sm border border-white/30 rounded-lg text-gray-800 placeholder-white/70 focus:ring-1 focus:ring-white focus:border-white outline-none transition duration-200 text-sm"
               />
@@ -76,6 +83,7 @@ const Login = () => {
               <input
                 name="password"
                 type="password"
+                required
                 placeholder="Enter your password"
                 className="w-full px-3 py-2 bg-white/20 backdrop-blur-sm border border-white/30 rounded-lg text-gray-800 placeholder-white/70 focus:ring-1 focus:ring-white focus:border-white outline-none transition duration-200 text-sm"
               />

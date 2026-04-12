@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import apiRequest from "../lib/apiRequest"; // apiRequest ইমপোর্ট করা হয়েছে
 
 const SignUp = () => {
   const [error, setError] = useState("");
@@ -8,11 +8,13 @@ const SignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(""); // এরর রিসেট করা
     const formData = new FormData(e.target);
     const inputs = Object.fromEntries(formData);
 
     try {
-      await axios.post("http://localhost:8800/api/auth/register", inputs);
+      // লোকাল হোস্টের বদলে apiRequest ব্যবহার করা হয়েছে
+      await apiRequest.post("/auth/register", inputs);
       navigate("/login");
     } catch (err) {
       setError(err.response?.data?.message || "Something went wrong!");
@@ -54,6 +56,9 @@ const SignUp = () => {
         </div>
 
         <div className="p-6 bg-transparent">
+          {/* এরর মেসেজ দেখানোর জন্য ডিভ */}
+          {error && <p className="text-red-500 text-xs text-center mb-2">{error}</p>}
+          
           <form className="space-y-4" onSubmit={handleSubmit}>
             <div>
               <label className="block text-sm font-medium text-white mb-1 drop-shadow">
@@ -62,6 +67,7 @@ const SignUp = () => {
               <input
                 name="username"
                 type="text"
+                required
                 placeholder="Enter your username"
                 className="w-full px-3 py-2 bg-white/20 backdrop-blur-sm border border-white/30 rounded-lg text-gray-800 placeholder-white/70 focus:ring-1 focus:ring-white focus:border-white outline-none transition duration-200 text-sm"
               />
@@ -74,6 +80,7 @@ const SignUp = () => {
               <input
                 name="email"
                 type="email"
+                required
                 placeholder="Enter your email"
                 className="w-full px-3 py-2 bg-white/20 backdrop-blur-sm border border-white/30 rounded-lg text-gray-800 placeholder-white/70 focus:ring-1 focus:ring-white focus:border-white outline-none transition duration-200 text-sm"
               />
@@ -86,6 +93,7 @@ const SignUp = () => {
               <input
                 name="password"
                 type="password"
+                required
                 placeholder="Enter your password"
                 className="w-full px-3 py-2 bg-white/20 backdrop-blur-sm border border-white/30 rounded-lg text-gray-800 placeholder-white/70 focus:ring-1 focus:ring-white focus:border-white outline-none transition duration-200 text-sm"
               />
