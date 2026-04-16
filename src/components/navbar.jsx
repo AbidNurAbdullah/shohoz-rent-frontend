@@ -15,13 +15,15 @@ const Navbar = () => {
 
   return (
     <header className="absolute top-0 left-0 w-full bg-transparent z-50">
-      <div className="container ml-30 flex items-center py-6 pl-4">
-      
-        <Link to="/" className="flex items-center space-x-3">
+      {/* ml-30 সরিয়ে mx-auto এবং px-6 ব্যবহার করা হয়েছে যাতে স্ক্রিনের মাঝখানে থাকে */}
+      <div className="max-w-[1400px] mx-auto flex items-center justify-between py-6 px-6">
+        
+        {/* Logo Section */}
+        <Link to="/" className="flex items-center space-x-3 shrink-0">
           <img
             src="/logo.jpg"
             alt="Shohoz Rent Logo"
-            className="h-14 w-14 object-contain"
+            className="h-14 w-14 object-contain rounded-md"
           />
           <div>
             <h1 className="text-2xl font-light text-gray-100 leading-none">
@@ -33,10 +35,11 @@ const Navbar = () => {
           </div>
         </Link>
 
-        
-        <div className="flex-1 flex items-center justify-end">
-        
-          <nav className="flex space-x-10 font-semibold">
+        {/* Right Section: Navigation + User Actions */}
+        <div className="flex items-center space-x-8 md:space-x-12">
+          
+          {/* Navigation Links - Hidden on very small screens for better UI */}
+          <nav className="hidden sm:flex items-center space-x-8 font-semibold">
             <Link
               to="/"
               className="text-gray-100 hover:text-yellow-400 transition"
@@ -57,17 +60,15 @@ const Navbar = () => {
             </Link>
           </nav>
 
-        
-          <div className="flex items-center space-x-4 ml-27 mr-10">
+          {/* User Profile / Auth Buttons */}
+          <div className="flex items-center">
             {currentUser ? (
-              <div className="flex items-center space-x-3">
-                <span className="text-white text-xl font-semibold hidden md:inline">
+              <div className="flex items-center space-x-4">
+                <span className="text-white text-lg font-semibold hidden lg:inline">
                   {currentUser.username}
                 </span>
                 <Link to="/profile">
                   <img
-                    /* ইমেজ লজিক: ক্লাউডিনারি লিঙ্ক হলে সরাসরি দেখাবে, 
-                       লোকাল পাথ হলে লাইভ ব্যাকএন্ড ইউআরএল সামনে যোগ করবে */
                     src={
                       currentUser.avatar 
                       ? (currentUser.avatar.startsWith("http") 
@@ -81,7 +82,7 @@ const Navbar = () => {
                 </Link>
               </div>
             ) : (
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-6">
                 <Link
                   to="/login"
                   className="text-white font-bold hover:text-yellow-400 transition"
@@ -90,7 +91,7 @@ const Navbar = () => {
                 </Link>
                 <Link
                   to="/signup"
-                  className="bg-gray-200 text-gray-900 px-5 py-2 rounded-full font-semibold hover:bg-white transition"
+                  className="bg-gray-200 text-gray-900 px-6 py-2 rounded-full font-semibold hover:bg-white transition whitespace-nowrap"
                 >
                   Sign up
                 </Link>
