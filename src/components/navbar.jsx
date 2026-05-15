@@ -15,7 +15,6 @@ const Navbar = () => {
 
   return (
     <header className="absolute top-0 left-0 w-full bg-transparent z-50">
-      {/* ডিজাইন সেম রাখতে ml-30 এর বদলে px-10 ব্যবহার করা হয়েছে যা কন্টেন্টকে ভেতরে রাখবে */}
       <div className="w-full flex items-center py-6 px-4 md:px-12 lg:px-20">
       
         <Link to="/" className="flex items-center space-x-3">
@@ -42,6 +41,17 @@ const Navbar = () => {
             >
               Home
             </Link>
+
+            {/* অ্যাডমিন লগইন করা থাকলে এই লিঙ্কটি দেখাবে, ডিজাইন একদম সেম রাখা হয়েছে */}
+            {currentUser && currentUser.role === "ADMIN" && (
+              <Link
+                to="/admin"
+                className="text-yellow-400 hover:text-white transition"
+              >
+                Admin Panel
+              </Link>
+            )}
+
             <Link
               to="/about"
               className="text-gray-100 hover:text-yellow-400 transition"
@@ -56,7 +66,6 @@ const Navbar = () => {
             </Link>
           </nav>
 
-          {/* এখানে ml-27 এর বদলে gap ব্যবহার করা হয়েছে যাতে ডিজাইন সেম থাকে কিন্তু ওভারফ্লো না হয় */}
           <div className="flex items-center space-x-4 ml-10 md:ml-20 mr-4">
             {currentUser ? (
               <div className="flex items-center space-x-3">
